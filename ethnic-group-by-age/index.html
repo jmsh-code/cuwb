@@ -15,13 +15,8 @@
   --f-display:"Public Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
   --f-body:"Public Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
   --f-data:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+  color-scheme:light;
 }
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --bg:#12181e; --surface:#1a222a; --fg:#e3e9ee; --muted:#9aa7b3; --rule:#2e3a45;
-  --accent:#4fb8c6; --accent-fg:#0c1418; --band:#202a33; color-scheme:dark}}
-:root[data-theme="dark"]{
-  --bg:#12181e; --surface:#1a222a; --fg:#e3e9ee; --muted:#9aa7b3; --rule:#2e3a45;
-  --accent:#4fb8c6; --accent-fg:#0c1418; --band:#202a33; color-scheme:dark}
 body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:15px;line-height:1.5}
 .wrap{max-width:1040px;margin:0 auto;padding-inline:16px;padding-block:28px 48px;display:grid;gap:20px}
 h1{font-family:var(--f-display);font-weight:700;font-size:1.65rem;line-height:1.2;margin:0;text-wrap:balance}
@@ -59,7 +54,7 @@ td.small{color:var(--muted);font-style:italic}
   <header style="display:grid;gap:8px">
     <p class="org">Community United West Berkshire</p>
     <h1>Ethnic group by age: West Berkshire, Reading and Wokingham</h1>
-    <p class="meta">Reference CUDAT001 · Version v1.0.0 · 30 September 2026</p>
+    <p class="meta">Reference CUDAT001 · Version v1.0.1 · 30 September 2026</p>
     <p class="lede">Census 2021, usual residents, all 19 tick-box ethnic groups crossed with six age bands.  Percentages are the share of each age band, so each column sums to 100%.</p>
   </header>
 
