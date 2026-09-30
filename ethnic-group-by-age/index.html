@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Census 2021 ethnic group by age for West Berkshire, Reading and Wokingham.">
+<title>Berkshire Ethnicity by Age</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: single reading column, area tabs + measure toggle above one full-width statistical table */
+:root{
+  --bg:#f4f6f8; --surface:#ffffff; --fg:#1b2530; --muted:#5b6876; --rule:#d5dce3;
+  --accent:#0f6a78; --accent-fg:#ffffff; --band:#e8edf1;
+  --f-display:"Public Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-body:"Public Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-data:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#12181e; --surface:#1a222a; --fg:#e3e9ee; --muted:#9aa7b3; --rule:#2e3a45;
+  --accent:#4fb8c6; --accent-fg:#0c1418; --band:#202a33; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#12181e; --surface:#1a222a; --fg:#e3e9ee; --muted:#9aa7b3; --rule:#2e3a45;
+  --accent:#4fb8c6; --accent-fg:#0c1418; --band:#202a33; color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:15px;line-height:1.5}
+.wrap{max-width:1040px;margin:0 auto;padding-inline:16px;padding-block:28px 48px;display:grid;gap:20px}
+h1{font-family:var(--f-display);font-weight:700;font-size:1.65rem;line-height:1.2;margin:0;text-wrap:balance}
+.lede{margin:0;color:var(--muted);max-width:65ch}
+.org{margin:0;font-size:.8rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--accent)}
+.meta{margin:0;font-size:.8rem;color:var(--muted);font-family:var(--f-data)}
+.controls{display:flex;flex-wrap:wrap;gap:12px 24px;align-items:center}
+.seg{display:inline-flex;border:1px solid var(--rule);border-radius:6px;overflow:hidden;background:var(--surface)}
+.seg button{font:inherit;font-size:.9rem;border:0;background:transparent;color:var(--fg);padding:7px 14px;cursor:pointer}
+.seg button+button{border-left:1px solid var(--rule)}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-fg);font-weight:600}
+.seg button:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+.label{font-size:.75rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-right:8px}
+.tablebox{overflow-x:auto;background:var(--surface);border:1px solid var(--rule);border-radius:6px}
+table{border-collapse:collapse;width:100%;min-width:720px;font-size:.88rem}
+th,td{padding:6px 10px;text-align:right;border-bottom:1px solid var(--rule);white-space:nowrap}
+th:first-child,td:first-child{text-align:left;position:sticky;left:0;background:var(--surface)}
+thead th{font-weight:600;font-size:.78rem;color:var(--muted);vertical-align:bottom}
+td.num{font-family:var(--f-data);font-variant-numeric:tabular-nums}
+tr.group td{background:var(--band);font-weight:600}
+tr.group td:first-child{background:var(--band)}
+tr.sub td:first-child{padding-left:24px}
+tr.total td{font-weight:600;border-top:2px solid var(--fg)}
+td.small{color:var(--muted);font-style:italic}
+.allcol{border-left:1px solid var(--rule)}
+.notes{font-size:.85rem;color:var(--muted);max-width:75ch;display:grid;gap:6px}
+.notes p{margin:0}
+.notes a{color:var(--accent)}
+</style>
+<style>*,*::before,*::after{box-sizing:border-box}body{margin:0}</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header style="display:grid;gap:8px">
+    <p class="org">Community United West Berkshire</p>
+    <h1>Ethnic group by age: West Berkshire, Reading and Wokingham</h1>
+    <p class="meta">Reference CUDAT001 · Version v1.0.0 · 30 September 2026</p>
+    <p class="lede">Census 2021, usual residents, all 19 tick-box ethnic groups crossed with six age bands.  Percentages are the share of each age band, so each column sums to 100%.</p>
+  </header>
+
+  <div class="controls">
+    <div><span class="label">Area</span>
+      <span class="seg" id="areaSeg" role="group" aria-label="Area"></span></div>
+    <div><span class="label">Show</span>
+      <span class="seg" id="measureSeg" role="group" aria-label="Measure">
+        <button type="button" id="m-pct" data-m="pct" aria-pressed="true">% of age band</button>
+        <button type="button" id="m-n" data-m="n" aria-pressed="false">Counts</button>
+      </span></div>
+  </div>
+
+  <div class="tablebox"><table id="tbl" aria-live="polite"></table></div>
+
+  <div class="notes">
+    <p>Source: Office for National Statistics (ONS), Census 2021, custom dataset: ethnic group (20 categories) by age (6 categories), lower-tier local authority.  Group totals reconcile with the published TS021 table to within one to four people; the gap is ONS's deliberate small-cell perturbation, used to protect confidentiality.</p>
+    <p>Counts under 50 are shown in grey italics.  At that size the perturbation can move a figure noticeably, so treat those cells as approximate.</p>
+    <p>"White British" is the Census category "White: English, Welsh, Scottish, Northern Irish or British".</p>
+    <p>Source: Office for National Statistics, licensed under the <a href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/" target="_blank" rel="noopener">Open Government Licence v3.0</a>.</p>
+    <p><a href="https://api.beta.ons.gov.uk/v1/population-types/UR/census-observations?dimensions=ethnic_group_tb_20b,resident_age_6a&area-type=ltla,E06000037,E06000038,E06000041" target="_blank" rel="noopener">ONS API query used for this table</a></p>
+    <p><a href="20260930_CUDAT001_v1.0.0_Ethnic-group-by-age.xlsx" download>Download the data as an Excel workbook</a></p>
+  </div>
+</div>
+
+<script>
+const AGES=["0–15","16–24","25–34","35–49","50–64","65+"];
+const GROUPS=[
+ ["Asian, Asian British or Asian Welsh",["Bangladeshi","Chinese","Indian","Pakistani","Other Asian"]],
+ ["Black, Black British, Black Welsh, Caribbean or African",["African","Caribbean","Other Black"]],
+ ["Mixed or Multiple ethnic groups",["White and Asian","White and Black African","White and Black Caribbean","Other Mixed"]],
+ ["White",["White British","Irish","Gypsy or Irish Traveller","Roma","Other White"]],
+ ["Other ethnic group",["Arab","Any other ethnic group"]]
+];
+const DATA={
+"West Berkshire":[[124,46,69,117,28,15],[151,90,93,224,169,74],[809,153,501,1116,338,166],[189,68,101,181,96,26],[160,101,126,352,220,87],
+[262,122,139,356,180,36],[57,43,71,126,241,89],[114,31,26,55,63,22],
+[683,185,129,149,96,32],[248,70,52,80,39,12],[465,202,165,136,64,23],[402,136,124,214,115,35],
+[25360,12447,14760,25188,30717,29781],[79,64,136,298,420,406],[71,17,34,39,20,8],[32,15,38,52,19,3],[1238,554,1572,3102,1320,593],
+[88,26,32,86,34,13],[178,70,150,281,141,87]],
+"Reading":[[315,225,170,272,125,25],[416,569,587,674,322,126],[2701,957,2152,3678,880,409],[2482,1089,1351,2100,817,440],[1383,870,1756,1961,1179,810],
+[1776,1187,1218,2141,1171,172],[328,329,429,635,986,586],[637,224,146,198,293,76],
+[1043,420,293,214,104,43],[612,229,137,160,84,27],[1676,713,565,385,173,43],[789,379,315,328,163,67],
+[14620,13291,13650,17081,18059,16466],[95,160,333,426,496,529],[24,24,27,10,16,7],[78,83,206,155,43,8],[2930,2344,5827,6977,2157,764],
+[352,214,273,321,90,32],[606,477,777,1007,506,347]],
+"Wokingham":[[111,58,50,109,46,14],[595,220,237,819,380,141],[3541,867,1132,4863,1370,639],[1717,613,702,1428,522,259],[508,223,301,834,392,178],
+[839,335,348,947,388,55],[74,64,102,205,272,147],[252,67,44,80,76,10],
+[1248,308,224,233,155,44],[398,93,55,68,48,4],[574,241,230,144,86,29],[634,189,156,250,128,32],
+[23304,11661,14302,24221,27965,27634],[105,80,122,347,432,418],[115,47,40,54,45,28],[23,17,46,67,22,7],[1880,800,1682,4144,1560,684],
+[318,119,123,252,103,33],[444,155,231,607,325,193]]
+};
+let area="West Berkshire", measure="pct";
+const sum=a=>a.reduce((x,y)=>x+y,0);
+const fmtN=n=>n.toLocaleString("en-GB");
+const fmtP=p=>p<0.05?"<0.1%":p.toFixed(1)+"%";
+function cells(vals,tot,small){
+  const all=sum(vals), T=sum(tot);
+  const row=vals.map((v,i)=>{
+    const cls="num"+(small&&v<50?" small":"");
+    return `<td class="${cls}">${measure==="pct"?fmtP(100*v/tot[i]):fmtN(v)}</td>`;
+  });
+  row.push(`<td class="num allcol${small&&all<50?" small":""}">${measure==="pct"?fmtP(100*all/T):fmtN(all)}</td>`);
+  return row.join("");
+}
+function render(){
+  const d=DATA[area];
+  const tot=AGES.map((_,i)=>sum(d.map(r=>r[i])));
+  let h=`<thead><tr><th scope="col">Ethnic group</th>${AGES.map(a=>`<th scope="col">${a}</th>`).join("")}<th scope="col" class="allcol">All ages</th></tr></thead><tbody>`;
+  let k=0;
+  for(const [g,subs] of GROUPS){
+    const rows=d.slice(k,k+subs.length);
+    const gv=AGES.map((_,i)=>sum(rows.map(r=>r[i])));
+    h+=`<tr class="group"><td>${g}</td>${cells(gv,tot,false)}</tr>`;
+    subs.forEach((s,j)=>{h+=`<tr class="sub"><td>${s}</td>${cells(rows[j],tot,true)}</tr>`;});
+    k+=subs.length;
+  }
+  h+=`<tr class="total"><td>All usual residents</td>${measure==="pct"?AGES.map(()=>`<td class="num">100%</td>`).join("")+`<td class="num allcol">100%</td>`:tot.map(t=>`<td class="num">${fmtN(t)}</td>`).join("")+`<td class="num allcol">${fmtN(sum(tot))}</td>`}</tr></tbody>`;
+  document.getElementById("tbl").innerHTML=h;
+}
+const aseg=document.getElementById("areaSeg");
+Object.keys(DATA).forEach((a,i)=>{
+  const b=document.createElement("button");b.type="button";b.id="a-"+i;b.textContent=a;
+  b.setAttribute("aria-pressed",a===area);
+  b.onclick=()=>{area=a;[...aseg.children].forEach(x=>x.setAttribute("aria-pressed",x===b));render();};
+  aseg.appendChild(b);
+});
+document.querySelectorAll("#measureSeg button").forEach(b=>b.onclick=()=>{
+  measure=b.dataset.m;document.querySelectorAll("#measureSeg button").forEach(x=>x.setAttribute("aria-pressed",x===b));render();
+});
+render();
+</script>
+
+</body>
+</html>
